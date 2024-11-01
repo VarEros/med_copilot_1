@@ -22,6 +22,16 @@ class ConsultationViewModel extends ChangeNotifier {
     }
   }
 
+  // Cargar todas las consultas
+  Future<void> fetchConsultationsByPatient(int patientId) async {
+    try {
+      _consultations = await _consultationService.fetchConsultationsByPatient(patientId);
+      notifyListeners();
+    } catch (e) {
+      print('Error al cargar consultas: $e');
+    }
+  }
+
   // Agregar consulta
   Future<void> createConsultation(Consultation consultation) async {
     try {

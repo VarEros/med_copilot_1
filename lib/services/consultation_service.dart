@@ -17,6 +17,18 @@ class ConsultationService {
     }
   }
 
+  // Obtener todas las consultas por pacientes
+  Future<List<Consultation>> fetchConsultationsByPatient(int patientId) async {
+    final response = await http.get(Uri.parse('$baseUrl/patient/$patientId'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((json) => Consultation.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al cargar consultas');
+    }
+  }
+
   // Agregar una nueva consulta
   Future<void> createConsultation(Consultation consultation) async {
     final response = await http.post(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/views/consultation_form_view.dart';
 import 'package:med_copilot_1/views/patient_selection_view.dart';
 import 'package:provider/provider.dart';
 
 class ConsultationListView extends StatefulWidget {
-  const ConsultationListView({super.key});
+  final Patient? patient;
+  const ConsultationListView({super.key, this.patient});
 
   @override
   State<ConsultationListView> createState() => _ConsultationListViewState();
@@ -17,7 +19,12 @@ class _ConsultationListViewState extends State<ConsultationListView> {
       super.initState();
       // Llamamos a fetchPatients solo una vez al inicializar el widget
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<ConsultationViewModel>(context, listen: false).fetchConsultations();
+        if(widget.patient != null) {
+          Provider.of<ConsultationViewModel>(context, listen: false).fetchConsultationsByPatient(widget.patient!.id);
+        } else {
+          Provider.of<ConsultationViewModel>(context, listen: false).fetchConsultations();
+        }
+        
       });
     }
 
@@ -26,7 +33,7 @@ class _ConsultationListViewState extends State<ConsultationListView> {
     final consultationViewModel = Provider.of<ConsultationViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Consultas')),
+      appBar: AppBar(title: Text(widget.patient != null ? 'Consultas de ${widget.patient!.name} ${widget.patient!.lastname}' : 'Consultas recientes')),
       body: ListView.builder(
         itemCount: consultationViewModel.consultations.length,
         itemBuilder: (context, index) {

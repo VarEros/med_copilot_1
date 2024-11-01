@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
+import 'package:med_copilot_1/views/consultation_list_view.dart';
 import 'package:provider/provider.dart';
 import 'patient_form_view.dart';
 
@@ -35,6 +36,16 @@ class _PatientListViewState extends State<PatientListView> {
                 return ListTile(
                   title: Text('${patient.name} ${patient.lastname}'),
                   subtitle: Text('Edad: ${patient.calculateAge.toString()}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.folder),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ConsultationListView(patient: patient),
+                        ),
+                      );
+                    },
+                  ),
                   onTap: () {
                     patientViewModel.selectPatient(patient);
                     Navigator.of(context).push(MaterialPageRoute(

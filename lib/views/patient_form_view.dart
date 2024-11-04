@@ -1,5 +1,6 @@
 // views/patient_form_view.dart
 import 'package:flutter/material.dart';
+import 'package:med_copilot_1/Utils.dart';
 import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class _PatientFormViewState extends State<PatientFormView> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime(2000), // Fecha inicial del selector
+      initialDate: _birthdate ?? DateTime(2000), // Fecha inicial del selector
       firstDate: DateTime(1900), // Primer año disponible
       lastDate: DateTime.now(), // Última fecha disponible
     );
@@ -148,7 +149,7 @@ class _PatientFormViewState extends State<PatientFormView> {
                 onTap: () => _selectDate(context),
                 child: AbsorbPointer(
                   child: TextFormField(
-                    controller: TextEditingController(text: _birthdate != null ? '${_birthdate!.day} de ${_birthdate!.month}, ${_birthdate!.year}' : ''),
+                    controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
                     decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
                     validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
                   ),

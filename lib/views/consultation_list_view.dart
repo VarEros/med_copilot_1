@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_copilot_1/Utils.dart';
 import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/views/consultation_form_view.dart';
@@ -39,8 +40,8 @@ class _ConsultationListViewState extends State<ConsultationListView> {
         itemBuilder: (context, index) {
           final consultation = consultationViewModel.consultations[index];
           return ListTile(
-            title: Text(consultation.patient.name),
-            subtitle: Text(consultation.registrationDate!.toIso8601String()),
+            title: Text('${consultation.patient.name} ${consultation.patient.lastname}'),
+            subtitle: Text(getDateString(consultation.registrationDate!)),
             onTap: () {
               consultationViewModel.selectConsultation(consultation);
               Navigator.of(context).push(MaterialPageRoute(
@@ -54,7 +55,7 @@ class _ConsultationListViewState extends State<ConsultationListView> {
         onPressed: () {
           consultationViewModel.clearSelectedConsultation();
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const PatientSelectionView()
+            builder: (context) => widget.patient != null ? ConsultationFormView(selectedPatient: widget.patient!) : const PatientSelectionView()
           ));
         },
         child: const Icon(Icons.add),

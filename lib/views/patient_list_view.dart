@@ -34,8 +34,9 @@ class _PatientListViewState extends State<PatientListView> {
               itemBuilder: (context, index) {
                 final patient = patientViewModel.patients[index];
                 return ListTile(
+                  leading: CircleAvatar(child: Text(patient.calculateAge.toString())),
                   title: Text('${patient.name} ${patient.lastname}'),
-                  subtitle: Text('Edad: ${patient.calculateAge.toString()}'),
+                  subtitle: Text(patient.personalId),
                   trailing: IconButton(
                     icon: const Icon(Icons.folder),
                     onPressed: () {

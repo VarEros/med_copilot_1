@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
+import 'package:med_copilot_1/views/scanner_view.dart';
 import 'package:provider/provider.dart';
 import 'patient_form_view.dart';
 
@@ -12,6 +13,7 @@ class PatientListView extends StatefulWidget {
 }
 
 class _PatientListViewState extends State<PatientListView> {
+  String? patientString;
   @override
   void initState() {
     super.initState();
@@ -58,13 +60,51 @@ class _PatientListViewState extends State<PatientListView> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          patientViewModel.clearSelectedPatient();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const PatientFormView(isEditMode: false),
-          ));
+          _showOptionsDialog(context, patientViewModel);
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+   void _showOptionsDialog(BuildContext context, PatientViewModel patientViewModel) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Seleccione una opción'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.qr_code_scanner),
+                title: const Text('Escanear QR'),
+                onTap: () async {
+                  Navigator.pop(context); // Cierra el diálogo
+                  patientString = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ScannerView(),
+                    ),
+                  );
+                  patientViewModel.createPatientFromQR(patientString!);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Rellenar Formulario'),
+                onTap: () {
+                  Navigator.pop(context); // Cierra el diálogo
+                  patientViewModel.clearSelectedPatient();
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const PatientFormView(isEditMode: false),
+                  ));
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

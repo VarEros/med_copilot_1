@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:med_copilot_1/services/consultation_service.dart';
 import 'package:med_copilot_1/services/patient_service.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
@@ -11,6 +12,18 @@ void main() {
   runApp(const MainApp());
 }
 
+final ThemeData baseTheme = ThemeData(
+  fontFamily: GoogleFonts.raleway().fontFamily,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.green,
+  ),
+  navigationRailTheme: const NavigationRailThemeData(
+    elevation: 20
+    
+  ),
+  brightness: Brightness.light,
+);
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -21,9 +34,10 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PatientViewModel(PatientService())),
         ChangeNotifierProvider(create: (_) => ConsultationViewModel(ConsultationService()))
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
+        theme: baseTheme,
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
@@ -61,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             NavigationRail(
               selectedIndex: _selectedIndex,
               onDestinationSelected: _onDestinationSelected,
-              labelType: NavigationRailLabelType.selected,
+              labelType: NavigationRailLabelType.all,
               destinations: const [
                 NavigationRailDestination(
                   icon: Icon(Icons.people),

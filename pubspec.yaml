@@ -12,6 +12,7 @@ dependencies:
   http: ^1.2.2
   ai_barcode_scanner: ^6.0.1
   intl: ^0.18.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

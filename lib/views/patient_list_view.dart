@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
@@ -60,7 +62,14 @@ class _PatientListViewState extends State<PatientListView> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          if(Platform.isIOS || Platform.isAndroid) {
           _showOptionsDialog(context, patientViewModel);
+          } else {
+            patientViewModel.clearSelectedPatient();
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const PatientFormView(isEditMode: false),
+            ));
+          }
         },
         child: const Icon(Icons.add),
       ),

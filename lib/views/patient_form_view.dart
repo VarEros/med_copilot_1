@@ -40,8 +40,8 @@ class _PatientFormViewState extends State<PatientFormView> {
       _personalIdController.text = patientViewModel.selectedPatient!.personalId;
       _nameController.text = patientViewModel.selectedPatient!.name;
       _lastNameController.text = patientViewModel.selectedPatient!.lastname;
-      _phoneController.text = patientViewModel.selectedPatient!.phone!;
-      _emailController.text = patientViewModel.selectedPatient!.email!;
+      _phoneController.text = patientViewModel.selectedPatient!.phone ?? '';
+      _emailController.text = patientViewModel.selectedPatient!.email ?? '';
       _birthdate = patientViewModel.selectedPatient!.birthdate;
     }
   }
@@ -113,64 +113,66 @@ class _PatientFormViewState extends State<PatientFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.isEditMode ? 'Editar Paciente' : 'Agregar Paciente')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _personalIdController,
-                decoration: const InputDecoration(labelText: 'Cedula'),
-                validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-              ),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Nombres'),
-                validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-              ),
-              TextFormField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(labelText: 'Apellidos'),
-                validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-              ),
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(labelText: 'Teléfono'),
-                validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-                maxLength: 8,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Correo Electronico'),
-                validator: validateEmail,
-              ),
-              GestureDetector(
-                onTap: () => _selectDate(context),
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
-                    decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
-                    validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _personalIdController,
+                  decoration: const InputDecoration(labelText: 'Cedula'),
+                  validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                ),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Nombres'),
+                  validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                ),
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(labelText: 'Apellidos'),
+                  validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(labelText: 'Teléfono'),
+                  validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                  maxLength: 8,
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Correo Electronico'),
+                  validator: validateEmail,
+                ),
+                GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
+                      decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
+                      validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.isEditMode ? 'Guardar Cambios' : 'Guardar Paciente'),
-              ),
-              if (widget.isEditMode) ...[
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _deletePatient,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text('Eliminar Paciente'),
+                  onPressed: _submitForm,
+                  child: Text(widget.isEditMode ? 'Guardar Cambios' : 'Guardar Paciente'),
                 ),
+                if (widget.isEditMode) ...[
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _deletePatient,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Eliminar Paciente'),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

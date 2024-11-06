@@ -28,38 +28,51 @@ class _PatientListViewState extends State<PatientListView> {
   @override
   Widget build(BuildContext context) {
     final patientViewModel = Provider.of<PatientViewModel>(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Pacientes')),
       body: patientViewModel.patients.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: patientViewModel.patients.length,
-              itemBuilder: (context, index) {
-                final patient = patientViewModel.patients[index];
-                return ListTile(
-                  leading: CircleAvatar(child: Text(patient.calculateAge.toString())),
-                  title: Text('${patient.name} ${patient.lastname}'),
-                  subtitle: Text(patient.personalId),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.folder),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ConsultationListView(patient: patient),
-                        ),
-                      );
+          : Container(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.separated(
+                separatorBuilder: (BuildContext context, int index) =>  Divider(height: 10, color: colorScheme.surface),
+                itemCount: patientViewModel.patients.length,
+                itemBuilder: (context, index) {
+                  final patient = patientViewModel.patients[index];
+                  return ListTile(
+                    tileColor: colorScheme.brightness == Brightness.dark ? colorScheme.surfaceContainer : null,
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                    leading: CircleAvatar(
+                      backgroundColor: colorScheme.onSurface,
+                      foregroundColor: colorScheme.surfaceContainerLow,
+                      child: Text(patient.calculateAge.toString(), 
+                      textScaler: const TextScaler.linear(1.3)),
+                      ),
+                    title: Text('${patient.name} ${patient.lastname}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(patient.personalId),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.folder),
+                      highlightColor: colorScheme.primaryContainer,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ConsultationListView(patient: patient),
+                          ),
+                        );
+                      },
+                    ),
+                    onTap: () {
+                      patientViewModel.selectPatient(patient);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PatientFormView(isEditMode: true),
+                      ));
                     },
-                  ),
-                  onTap: () {
-                    patientViewModel.selectPatient(patient);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PatientFormView(isEditMode: true),
-                    ));
-                  },
-                );
-              },
-            ),
+                  );
+                },
+              ),
+          ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if(Platform.isIOS || Platform.isAndroid) {

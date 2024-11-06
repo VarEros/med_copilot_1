@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:med_copilot_1/services/consultation_service.dart';
@@ -13,15 +14,33 @@ void main() {
 }
 
 final ThemeData baseTheme = ThemeData(
-  fontFamily: GoogleFonts.raleway().fontFamily,
+  fontFamily: GoogleFonts.robotoCondensed().fontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.green,
+    brightness: Brightness.light,
   ),
-  navigationRailTheme: const NavigationRailThemeData(
-    elevation: 20
-    
+  appBarTheme: const AppBarTheme(
+    elevation: 10,
+    backgroundColor: Color(0xFF191d17),
+    foregroundColor: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(30),
+      )
+    ),
+    centerTitle: true,
   ),
-  brightness: Brightness.light,
+);
+
+final ThemeData darkTheme = ThemeData(
+  fontFamily: GoogleFonts.robotoCondensed().fontFamily,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.green,
+    brightness: Brightness.dark,
+  ),
+  appBarTheme: const AppBarTheme(
+    centerTitle: true,
+  ),
 );
 
 class MainApp extends StatelessWidget {
@@ -36,8 +55,10 @@ class MainApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: baseTheme,
+        darkTheme: darkTheme,
+        themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        home: const HomeScreen(),
+        home: const SafeArea(child: HomeScreen()),
       ),
     );
   }
@@ -73,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Mostrar NavigationRail en pantallas grandes y BottomNavigationBar en pantallas pequeñas
           if (MediaQuery.of(context).size.width > 600)
             NavigationRail(
+              leading: const Icon(Icons.medical_information, size: 50,),
               selectedIndex: _selectedIndex,
               onDestinationSelected: _onDestinationSelected,
               labelType: NavigationRailLabelType.all,
@@ -97,20 +119,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       // BottomNavigationBar para pantallas más pequeñas
       bottomNavigationBar: MediaQuery.of(context).size.width <= 600
-          ? BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: _onDestinationSelected,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Pacientes',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.folder),
-                  label: 'Consultas',
-                ),
-              ],
-            )
+          ? CurvedNavigationBar(
+            index: 0,
+            items: <Widget>[
+              Icon(Icons.people, size: 30, color: Theme.of(context).colorScheme.onSurface),
+              Icon(Icons.folder, size: 30, color: Theme.of(context).colorScheme.onSurface),
+            ],
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            buttonBackgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            backgroundColor: Colors.transparent,
+            animationCurve: Curves.easeInOut,
+            animationDuration: const Duration(milliseconds: 600),
+            onTap: _onDestinationSelected,
+            letIndexChange: (index) => true,
+          )
           : null,
     );
   }

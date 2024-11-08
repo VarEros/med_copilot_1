@@ -112,7 +112,10 @@ class _PatientFormViewState extends State<PatientFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.isEditMode ? 'Editar Paciente' : 'Agregar Paciente')),
+      appBar: AppBar(
+        title: Text(widget.isEditMode ? 'Editar Paciente' : 'Agregar Paciente'), 
+        actions: [IconButton(onPressed: _deletePatient, icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),)],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -122,55 +125,52 @@ class _PatientFormViewState extends State<PatientFormView> {
               children: [
                 TextFormField(
                   controller: _personalIdController,
-                  decoration: const InputDecoration(labelText: 'Cedula'),
+                  decoration: const InputDecoration(labelText: 'Cedula', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                  maxLength: 14,
                 ),
+                const SizedBox(height: 14),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Nombres'),
+                  decoration: const InputDecoration(labelText: 'Nombres', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                  maxLength: 30,
                 ),
+                const SizedBox(height: 14),
                 TextFormField(
                   controller: _lastNameController,
-                  decoration: const InputDecoration(labelText: 'Apellidos'),
+                  decoration: const InputDecoration(labelText: 'Apellidos', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
+                  maxLength: 30,
                 ),
+                const SizedBox(height: 14),
                 TextFormField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Teléfono'),
+                  decoration: const InputDecoration(labelText: 'Teléfono', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
                   maxLength: 8,
                 ),
+                const SizedBox(height: 14),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Correo Electronico'),
+                  decoration: const InputDecoration(labelText: 'Correo Electronico', counterText: ''),
                   validator: validateEmail,
+                  maxLength: 100,
                 ),
-                GestureDetector(
+                const SizedBox(height: 14),
+                TextFormField(
+                  controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
+                  decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
+                  validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
+                  readOnly: true,
                   onTap: () => _selectDate(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
-                      decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
-                      validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
-                    ),
-                  ),
+                  mouseCursor: SystemMouseCursors.click,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                FilledButton(
                   onPressed: _submitForm,
                   child: Text(widget.isEditMode ? 'Guardar Cambios' : 'Guardar Paciente'),
                 ),
-                if (widget.isEditMode) ...[
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _deletePatient,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    child: const Text('Eliminar Paciente'),
-                  ),
-                ],
               ],
             ),
           ),

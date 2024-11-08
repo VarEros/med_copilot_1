@@ -30,6 +30,17 @@ class _PatientListViewState extends State<PatientListView> {
     final patientViewModel = Provider.of<PatientViewModel>(context);
     final colorScheme = Theme.of(context).colorScheme;
 
+    void _handleAddButton() {
+      if(Platform.isIOS || Platform.isAndroid) {
+        _showOptionsDialog(context, patientViewModel);
+      } else {
+        patientViewModel.clearSelectedPatient();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const PatientFormView(isEditMode: false),
+        ));
+      }
+    } 
+
     return Scaffold(
       appBar: AppBar(title: const Text('Pacientes')),
       body: patientViewModel.patients.isEmpty
@@ -73,20 +84,15 @@ class _PatientListViewState extends State<PatientListView> {
                 },
               ),
           ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if(Platform.isIOS || Platform.isAndroid) {
-          _showOptionsDialog(context, patientViewModel);
-          } else {
-            patientViewModel.clearSelectedPatient();
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const PatientFormView(isEditMode: false),
-            ));
-          }
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _handleAddButton,
+        isExtended: MediaQuery.of(context).size.width > 600,
+        label: const Text('Añadir Paciente'),
+        tooltip: MediaQuery.of(context).size.width > 600 ? '' : 'Añadir paciente',
+        icon: const Icon(Icons.add),
       ),
     );
+    
   }
 
    void _showOptionsDialog(BuildContext context, PatientViewModel patientViewModel) {

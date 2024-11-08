@@ -14,26 +14,27 @@ void main() {
 }
 
 final ThemeData baseTheme = ThemeData(
-  fontFamily: GoogleFonts.robotoCondensed().fontFamily,
+  fontFamily: GoogleFonts.kanit().fontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.green,
-    brightness: Brightness.light,
+    brightness: Brightness.light
   ),
   appBarTheme: const AppBarTheme(
     elevation: 10,
     backgroundColor: Color(0xFF191d17),
     foregroundColor: Colors.white,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(30),
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(30),
       )
     ),
     centerTitle: true,
   ),
+
 );
 
 final ThemeData darkTheme = ThemeData(
-  fontFamily: GoogleFonts.robotoCondensed().fontFamily,
+  fontFamily: GoogleFonts.kanit().fontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.green,
     brightness: Brightness.dark,
@@ -41,6 +42,7 @@ final ThemeData darkTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     centerTitle: true,
   ),
+  inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder(), counterStyle: null)
 );
 
 class MainApp extends StatelessWidget {
@@ -56,7 +58,7 @@ class MainApp extends StatelessWidget {
       child: MaterialApp(
         theme: baseTheme,
         darkTheme: darkTheme,
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         home: const SafeArea(child: HomeScreen()),
       ),
@@ -94,7 +96,19 @@ class _HomeScreenState extends State<HomeScreen> {
           // Mostrar NavigationRail en pantallas grandes y BottomNavigationBar en pantallas pequeñas
           if (MediaQuery.of(context).size.width > 600)
             NavigationRail(
-              leading: const Icon(Icons.medical_information, size: 50,),
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              leading: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/logo.png', 
+                    color: Theme.of(context).colorScheme.onSurface,
+                    filterQuality: FilterQuality.medium,
+                    scale: 8,
+                  ),
+                  Text('Med Copilot', style: TextStyle(fontFamily: GoogleFonts.oswald().fontFamily, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20)
+                ],
+              ),
               selectedIndex: _selectedIndex,
               onDestinationSelected: _onDestinationSelected,
               labelType: NavigationRailLabelType.all,

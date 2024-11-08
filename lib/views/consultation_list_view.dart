@@ -32,24 +32,31 @@ class _ConsultationListViewState extends State<ConsultationListView> {
   @override
   Widget build(BuildContext context) {
     final consultationViewModel = Provider.of<ConsultationViewModel>(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.patient != null ? 'Consultas de ${widget.patient!.name} ${widget.patient!.lastname}' : 'Consultas recientes')),
-      body: ListView.builder(
-        itemCount: consultationViewModel.consultations.length,
-        itemBuilder: (context, index) {
-          final consultation = consultationViewModel.consultations[index];
-          return ListTile(
-            title: Text('${consultation.patient.name} ${consultation.patient.lastname}'),
-            subtitle: Text(getDateString(consultation.registrationDate!)),
-            onTap: () {
-              consultationViewModel.selectConsultation(consultation);
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ConsultationFormView(isEditMode: true, selectedPatient: consultation.patient),
-              ));
-            },
-          );
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.separated(
+          separatorBuilder: (BuildContext context, int index) =>  Divider(height: 10, color: colorScheme.surface),
+          itemCount: consultationViewModel.consultations.length,
+          itemBuilder: (context, index) {
+            final consultation = consultationViewModel.consultations[index];
+            return ListTile(
+              tileColor: colorScheme.brightness == Brightness.dark ? colorScheme.surfaceContainer : null,
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+              title: Text('${consultation.patient.name} ${consultation.patient.lastname}', style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(getDateString(consultation.registrationDate!)),
+              onTap: () {
+                consultationViewModel.selectConsultation(consultation);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ConsultationFormView(isEditMode: true, selectedPatient: consultation.patient),
+                ));
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

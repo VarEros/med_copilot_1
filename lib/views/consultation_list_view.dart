@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:med_copilot_1/Utils.dart';
+import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/views/consultation_form_view.dart';
@@ -34,6 +34,13 @@ class _ConsultationListViewState extends State<ConsultationListView> {
     final consultationViewModel = Provider.of<ConsultationViewModel>(context);
     final colorScheme = Theme.of(context).colorScheme;
 
+    handleAddButton() {
+      consultationViewModel.clearSelectedConsultation();
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => widget.patient != null ? ConsultationFormView(selectedPatient: widget.patient!) : const PatientSelectionView()
+      ));
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.patient != null ? 'Consultas de ${widget.patient!.name} ${widget.patient!.lastname}' : 'Consultas recientes')),
       body: Padding(
@@ -58,15 +65,7 @@ class _ConsultationListViewState extends State<ConsultationListView> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          consultationViewModel.clearSelectedConsultation();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => widget.patient != null ? ConsultationFormView(selectedPatient: widget.patient!) : const PatientSelectionView()
-          ));
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: getAddButton(context, handleAddButton, 'Consulta'),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:med_copilot_1/services/consultation_service.dart';
 import 'package:med_copilot_1/services/patient_service.dart';
+import 'package:med_copilot_1/themes.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
@@ -12,39 +12,6 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(const MainApp());
 }
-
-final ThemeData baseTheme = ThemeData(
-  fontFamily: GoogleFonts.kanit().fontFamily,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.green,
-    brightness: Brightness.light
-  ),
-  appBarTheme: const AppBarTheme(
-    elevation: 10,
-    backgroundColor: Color(0xFF191d17),
-    foregroundColor: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        bottomRight: Radius.circular(30),
-      )
-    ),
-    centerTitle: true,
-  ),
-
-);
-
-final ThemeData darkTheme = ThemeData(
-  fontFamily: GoogleFonts.kanit().fontFamily,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.green,
-    brightness: Brightness.dark,
-  ),
-  appBarTheme: const AppBarTheme(
-    centerTitle: true,
-  ),
-  inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder(), counterStyle: null)
-);
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -75,18 +42,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  void _onDestinationSelected(int index) => setState(() => _selectedIndex = index);
 
   // Lista de Widgets para cada sección
   final List<Widget> _screens = [
     const PatientListView(),
     const ConsultationListView()
   ];
-
-  void _onDestinationSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,18 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (MediaQuery.of(context).size.width > 600)
             NavigationRail(
               backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              leading: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/logo.png', 
-                    color: Theme.of(context).colorScheme.onSurface,
-                    filterQuality: FilterQuality.medium,
-                    scale: 8,
-                  ),
-                  Text('Med Copilot', style: TextStyle(fontFamily: GoogleFonts.oswald().fontFamily, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20)
-                ],
-              ),
+              leading: getLogo(context),
               selectedIndex: _selectedIndex,
               onDestinationSelected: _onDestinationSelected,
               labelType: NavigationRailLabelType.all,

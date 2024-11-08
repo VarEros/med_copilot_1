@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
 import 'package:med_copilot_1/views/scanner_view.dart';
@@ -30,7 +31,7 @@ class _PatientListViewState extends State<PatientListView> {
     final patientViewModel = Provider.of<PatientViewModel>(context);
     final colorScheme = Theme.of(context).colorScheme;
 
-    void _handleAddButton() {
+    void handleAddButton() {
       if(Platform.isIOS || Platform.isAndroid) {
         _showOptionsDialog(context, patientViewModel);
       } else {
@@ -84,15 +85,8 @@ class _PatientListViewState extends State<PatientListView> {
                 },
               ),
           ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _handleAddButton,
-        isExtended: MediaQuery.of(context).size.width > 600,
-        label: const Text('Añadir Paciente'),
-        tooltip: MediaQuery.of(context).size.width > 600 ? '' : 'Añadir paciente',
-        icon: const Icon(Icons.add),
-      ),
+      floatingActionButton: getAddButton(context, handleAddButton, 'Paciente'),
     );
-    
   }
 
    void _showOptionsDialog(BuildContext context, PatientViewModel patientViewModel) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_copilot_1/models/consultation.dart';
 import 'package:med_copilot_1/models/patient.dart';
+import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -26,21 +27,17 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      // Agregar la consulta a través del ViewModel
+      final consultationViewModel = Provider.of<ConsultationViewModel>(context, listen: false);
+
       final consultation = Consultation(
-        id: 0,
+        id: widget.isEditMode ? consultationViewModel.selectedConsultation!.id : 0,
         description: _descripcionController.text,
         registrationDate: DateTime.now(),
         patient: widget.selectedPatient
       );
 
-      // Agregar la consulta a través del ViewModel
-      final consultationViewModel = Provider.of<ConsultationViewModel>(context, listen: false);
-      if (widget.isEditMode) {
-        consultationViewModel.updateConsultation(consultation);
-      } else {
-        consultationViewModel.createConsultation(consultation);
-      }
-
+      widget.isEditMode ? consultationViewModel.updateConsultation(consultation) : consultationViewModel.createConsultation(consultation);
       Navigator.of(context).pop(); // Volver a la pantalla anterior
       if (!widget.isEditMode) Navigator.of(context).pop();
     }
@@ -71,6 +68,15 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.isEditMode ? 'Editar Consulta' : 'Agregar Consulta'),
+        actions: [IconButton(
+          onPressed: () => showConfirmationDialog(
+            context: context, 
+            title: 'Eliminar Consulta', 
+            message: 'eliminar la consulta del paciente ${widget.selectedPatient.name} ${widget.selectedPatient.lastname}', 
+            onConfirm: _deleteConsultation
+          ), 
+          icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),
+        )],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,16 +98,6 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
                 onPressed: _submitForm,
                 child: Text(widget.isEditMode ? 'Guardar Cambios' : 'Guardar Consulta'),
               ),
-              if (widget.isEditMode) ...[
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _deleteConsultation,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text('Eliminar Paciente'),
-                ),
-              ],
             ],
           ),
         ),

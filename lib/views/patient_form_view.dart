@@ -1,7 +1,6 @@
-// views/patient_form_view.dart
 import 'package:flutter/material.dart';
-import 'package:med_copilot_1/Utils.dart';
 import 'package:med_copilot_1/models/patient.dart';
+import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -59,25 +58,18 @@ class _PatientFormViewState extends State<PatientFormView> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
+      initialDatePickerMode: DatePickerMode.year,
       initialDate: _birthdate ?? DateTime(2000), // Fecha inicial del selector
       firstDate: DateTime(1900), // Primer año disponible
       lastDate: DateTime.now(), // Última fecha disponible
     );
     if (picked != null && picked != _birthdate) {
-      setState(() {
-        _birthdate = picked;
-      });
+      setState(() => _birthdate = picked);
     }
   }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      if (_birthdate == null) {
-        // Mostrar mensaje de error si no se ha seleccionado una fecha
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Por favor, selecciona una fecha de nacimiento')));
-        return;
-      }
-      
       final patientViewModel = Provider.of<PatientViewModel>(context, listen: false);
 
       final patient = Patient(
@@ -91,12 +83,7 @@ class _PatientFormViewState extends State<PatientFormView> {
         followUp: true
       );
 
-      if (widget.isEditMode) {
-        patientViewModel.updatePatient(patient);
-      } else {
-        patientViewModel.createPatient(patient);
-      }
-
+      widget.isEditMode ? patientViewModel.updatePatient(patient) : patientViewModel.createPatient(patient);
       Navigator.of(context).pop(); // Cierra el formulario después de guardar o actualizar
     }
   }
@@ -114,7 +101,15 @@ class _PatientFormViewState extends State<PatientFormView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.isEditMode ? 'Editar Paciente' : 'Agregar Paciente'), 
-        actions: [IconButton(onPressed: _deletePatient, icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),)],
+        actions: [IconButton(
+          onPressed: () => showConfirmationDialog(
+            context: context, 
+            title: 'Eliminar Paciente', 
+            message: 'eliminar al paciente ${_nameController.text} ${_lastNameController.text}', 
+            onConfirm: _deletePatient
+          ), 
+          icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),
+        )],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -161,7 +156,7 @@ class _PatientFormViewState extends State<PatientFormView> {
                 TextFormField(
                   controller: TextEditingController(text: _birthdate != null ? getDateString(_birthdate!) : ''),
                   decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
-                  validator: (value) => _birthdate == null ? 'Selecciona una fecha' : null,
+                  validator: (value) => _birthdate == null ? 'Campo obligatorio' : null,
                   readOnly: true,
                   onTap: () => _selectDate(context),
                   mouseCursor: SystemMouseCursors.click,

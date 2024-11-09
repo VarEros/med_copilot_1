@@ -54,7 +54,6 @@ class _PatientListViewState extends State<PatientListView> {
                 itemBuilder: (context, index) {
                   final patient = patientViewModel.patients[index];
                   return ListTile(
-                    tileColor: colorScheme.brightness == Brightness.dark ? colorScheme.surfaceContainer : null,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                     leading: CircleAvatar(
                       backgroundColor: colorScheme.onSurface,

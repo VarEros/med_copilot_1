@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 const months = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
@@ -7,6 +8,8 @@ const months = [
 
 String getDateString(DateTime date) => '${date.day} de ${getMonthName(date.month)}, ${date.year}';
 String getMonthName(int month) => months[month - 1];
+
+final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
 Future showConfirmationDialog({
   required BuildContext context,
@@ -54,4 +57,34 @@ Widget getAddButton(
     tooltip: MediaQuery.of(context).size.width > 600 ? '' : 'Añadir $text',
     icon: const Icon(Icons.add),
   );
+}
+
+class SnackbarManager {
+  String object;
+
+  SnackbarManager(this.object);
+
+  successSnackbar() { 
+    return scaffoldKey.currentState!.showSnackBar(SnackBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: AwesomeSnackbarContent(
+        title: object,
+        message: '${object.toLowerCase()} con exito',
+        contentType: ContentType.success,
+      )
+    ));
+  }
+
+  errorSnackbar(String errorMessage) { 
+    return scaffoldKey.currentState!.showSnackBar(SnackBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: AwesomeSnackbarContent(
+        title: 'Error',
+        message: errorMessage,
+        contentType: ContentType.failure,
+      )
+    ));
+  }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:med_copilot_1/models/consultation.dart';
 import 'package:med_copilot_1/services/consultation_service.dart';
+import 'package:med_copilot_1/utils.dart';
 
 class ConsultationViewModel extends ChangeNotifier {
   final ConsultationService _consultationService;
+  final SnackbarManager _snackbarManager = SnackbarManager('Consulta Guardada');
   List<Consultation> _consultations = [];
   Consultation? _selectedConsultation;
 
@@ -36,6 +39,7 @@ class ConsultationViewModel extends ChangeNotifier {
   Future<void> createConsultation(Consultation consultation) async {
     try {
       await _consultationService.createConsultation(consultation);
+      _snackbarManager.successSnackbar();
       _consultations.add(consultation);
       notifyListeners();
     } catch (e) {

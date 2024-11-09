@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:med_copilot_1/services/consultation_service.dart';
 import 'package:med_copilot_1/services/patient_service.dart';
 import 'package:med_copilot_1/themes.dart';
+import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
@@ -23,7 +24,8 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ConsultationViewModel(ConsultationService()))
       ],
       child: MaterialApp(
-        theme: baseTheme,
+        scaffoldMessengerKey: scaffoldKey,
+        theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,

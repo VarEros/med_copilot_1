@@ -26,7 +26,7 @@ class PatientService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Error al agregar paciente');
+      throw json.decode(response.body)['message'];
     }
   }
 
@@ -39,7 +39,7 @@ class PatientService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Error al actualizar paciente');
+      throw json.decode(response.body)['message'];
     }
   }
 

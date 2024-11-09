@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final ThemeData baseTheme = ThemeData(
+final lightScheme = ColorScheme.fromSeed(
+  seedColor: Colors.green,
+  brightness: Brightness.light,
+);
+
+final ThemeData lightTheme = ThemeData(
   fontFamily: GoogleFonts.kanit().fontFamily,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.green,
-    brightness: Brightness.light
-  ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF191d17),
-    foregroundColor: Colors.white,
+  colorScheme: lightScheme,
+  appBarTheme: AppBarTheme(
+    backgroundColor: lightScheme.onSurface,
+    foregroundColor: lightScheme.surface,
     centerTitle: true,
   ),
   inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder())
 );
 
+final darkScheme = ColorScheme.fromSeed(
+  seedColor: Colors.green,
+  brightness: Brightness.dark,
+);
+
 final ThemeData darkTheme = ThemeData(
   fontFamily: GoogleFonts.kanit().fontFamily,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.green,
-    brightness: Brightness.dark,
-  ),
+  colorScheme: darkScheme,
   appBarTheme: const AppBarTheme(centerTitle: true),
-  inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder())
+  inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder()),
+  listTileTheme: ListTileThemeData(tileColor: darkScheme.surfaceContainer)
 );
 
 Widget getLogo(BuildContext context) {

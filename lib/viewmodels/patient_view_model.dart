@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/services/patient_service.dart';
+import 'package:med_copilot_1/utils.dart';
 
 class PatientViewModel extends ChangeNotifier {
   final PatientService _patientService;
+  final SnackbarManager _snackbarManager = SnackbarManager('Paciente Guardado');
   List<Patient> _patients = [];
   Patient? _selectedPatient;
 
@@ -28,8 +31,10 @@ class PatientViewModel extends ChangeNotifier {
     try {
       await _patientService.createPatient(patient);
       _patients.add(patient);
+      _snackbarManager.successSnackbar();
       notifyListeners();
     } catch (e) {
+      _snackbarManager.errorSnackbar(e.toString());
       print('Error al agregar paciente: $e');
     }
   }
@@ -53,9 +58,11 @@ class PatientViewModel extends ChangeNotifier {
       int index = _patients.indexWhere((p) => p.id == patient.id);
       if (index != -1) {
         _patients[index] = patient;
+        _snackbarManager.successSnackbar();
         notifyListeners();
       }
     } catch (e) {
+      _snackbarManager.errorSnackbar(e.toString());
       print('Error al actualizar paciente: $e');
     }
   }
@@ -65,8 +72,10 @@ class PatientViewModel extends ChangeNotifier {
     try {
       await _patientService.deletePatient(id);
       _patients.removeWhere((p) => p.id == id);
+      _snackbarManager.successSnackbar();
       notifyListeners();
     } catch (e) {
+      _snackbarManager.errorSnackbar(e.toString());
       print('Error al eliminar paciente: $e');
     }
   }

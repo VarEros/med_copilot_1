@@ -99,8 +99,8 @@ class _PatientFormViewState extends State<PatientFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditMode ? 'Editar Paciente' : 'Agregar Paciente'), 
+      appBar: widget.isEditMode ? AppBar(
+        title: const Text('Editar Paciente'), 
         actions: [IconButton(
           onPressed: () => showConfirmationDialog(
             context: context, 
@@ -110,7 +110,7 @@ class _PatientFormViewState extends State<PatientFormView> {
           ), 
           icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),
         )],
-      ),
+      ): AppBar(title: const Text('Agregar Paciente')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

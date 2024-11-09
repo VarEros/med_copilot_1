@@ -42,7 +42,10 @@ class _ConsultationListViewState extends State<ConsultationListView> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.patient != null ? 'Consultas de ${widget.patient!.name} ${widget.patient!.lastname}' : 'Consultas recientes')),
+      appBar: AppBar(title: Text(
+        widget.patient != null ? 
+        'Consultas de ${widget.patient!.name.split(' ')[0]} ${widget.patient!.lastname.split(' ')[0]}' : 
+        'Consultas recientes')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.separated(

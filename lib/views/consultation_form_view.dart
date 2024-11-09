@@ -66,8 +66,8 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditMode ? 'Editar Consulta' : 'Agregar Consulta'),
+      appBar: widget.isEditMode ? AppBar(
+        title: const Text('Editar Consulta'),
         actions: [IconButton(
           onPressed: () => showConfirmationDialog(
             context: context, 
@@ -77,7 +77,7 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
           ), 
           icon: const Icon(Icons.delete), iconSize: 25, padding: const EdgeInsets.all(16.0),
         )],
-      ),
+      ): AppBar(title: const Text('Agregar Paciente')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -94,7 +94,7 @@ class _ConsultationFormViewState extends State<ConsultationFormView> {
                 validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              FilledButton(
                 onPressed: _submitForm,
                 child: Text(widget.isEditMode ? 'Guardar Cambios' : 'Guardar Consulta'),
               ),

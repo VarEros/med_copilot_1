@@ -62,7 +62,6 @@ Widget getAddButton(
 
 class SnackbarManager {
   String object;
-
   SnackbarManager(this.object);
 
   successSnackbar(String action) { 

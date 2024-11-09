@@ -8,29 +8,38 @@ import 'package:med_copilot_1/viewmodels/consultation_view_model.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
 import 'package:med_copilot_1/views/consultation_list_view.dart';
 import 'package:med_copilot_1/views/patient_list_view.dart';
+import 'package:med_copilot_1/views/settings_view.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadPreferences();
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PatientViewModel(PatientService())),
+        ChangeNotifierProvider(create: (_) => ConsultationViewModel(ConsultationService())),
+        ChangeNotifierProvider(create: (_) => themeProvider)
+      ],
+      child: const MainApp()
+    )
+  );
 }
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => PatientViewModel(PatientService())),
-        ChangeNotifierProvider(create: (_) => ConsultationViewModel(ConsultationService()))
-      ],
-      child: MaterialApp(
-        scaffoldMessengerKey: scaffoldKey,
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.dark,
-        debugShowCheckedModeBanner: false,
-        home: const SafeArea(child: HomeScreen()),
-      ),
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
+    return MaterialApp(
+      scaffoldMessengerKey: scaffoldKey,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeProvider.themeMode,
+      debugShowCheckedModeBanner: false,
+      home: const SafeArea(child: HomeScreen()),
     );
   }
 }
@@ -49,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // Lista de Widgets para cada sección
   final List<Widget> _screens = [
     const PatientListView(),
-    const ConsultationListView()
+    const ConsultationListView(),
+    const SettingsView()
   ];
 
   @override
@@ -75,6 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(Icons.folder),
                   selectedIcon: Icon(Icons.folder_outlined),
                   label: Text('Consultas'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.settings),
+                  selectedIcon: Icon(Icons.settings_outlined),
+                  label: Text('Ajustes'),
                 ),
               ],
             ),

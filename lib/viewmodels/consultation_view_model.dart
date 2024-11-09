@@ -6,7 +6,7 @@ import 'package:med_copilot_1/utils.dart';
 
 class ConsultationViewModel extends ChangeNotifier {
   final ConsultationService _consultationService;
-  final SnackbarManager _snackbarManager = SnackbarManager('Consulta Guardada');
+  final SnackbarManager _snackbarManager = SnackbarManager('Consulta');
   List<Consultation> _consultations = [];
   Consultation? _selectedConsultation;
 
@@ -39,7 +39,7 @@ class ConsultationViewModel extends ChangeNotifier {
   Future<void> createConsultation(Consultation consultation) async {
     try {
       await _consultationService.createConsultation(consultation);
-      _snackbarManager.successSnackbar();
+      _snackbarManager.successSnackbar('Guardada');
       _consultations.add(consultation);
       notifyListeners();
     } catch (e) {
@@ -54,6 +54,7 @@ class ConsultationViewModel extends ChangeNotifier {
       int index = _consultations.indexWhere((c) => c.id == consultation.id);
       if (index != -1) {
         _consultations[index] = consultation;
+        _snackbarManager.successSnackbar('Editada');
         notifyListeners();
       }
     } catch (e) {
@@ -66,6 +67,7 @@ class ConsultationViewModel extends ChangeNotifier {
     try {
       await _consultationService.deleteConsultation(id);
       _consultations.removeWhere((c) => c.id == id);
+      _snackbarManager.successSnackbar('Eliminada');
       notifyListeners();
     } catch (e) {
       print('Error al eliminar consulta: $e');

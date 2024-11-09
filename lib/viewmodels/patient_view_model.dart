@@ -7,7 +7,7 @@ import 'package:med_copilot_1/utils.dart';
 
 class PatientViewModel extends ChangeNotifier {
   final PatientService _patientService;
-  final SnackbarManager _snackbarManager = SnackbarManager('Paciente Guardado');
+  final SnackbarManager _snackbarManager = SnackbarManager('Paciente');
   List<Patient> _patients = [];
   Patient? _selectedPatient;
 
@@ -31,7 +31,7 @@ class PatientViewModel extends ChangeNotifier {
     try {
       await _patientService.createPatient(patient);
       _patients.add(patient);
-      _snackbarManager.successSnackbar();
+      _snackbarManager.successSnackbar('Guardado');
       notifyListeners();
     } catch (e) {
       _snackbarManager.errorSnackbar(e.toString());
@@ -58,7 +58,7 @@ class PatientViewModel extends ChangeNotifier {
       int index = _patients.indexWhere((p) => p.id == patient.id);
       if (index != -1) {
         _patients[index] = patient;
-        _snackbarManager.successSnackbar();
+        _snackbarManager.successSnackbar('Editado');
         notifyListeners();
       }
     } catch (e) {
@@ -72,7 +72,7 @@ class PatientViewModel extends ChangeNotifier {
     try {
       await _patientService.deletePatient(id);
       _patients.removeWhere((p) => p.id == id);
-      _snackbarManager.successSnackbar();
+      _snackbarManager.successSnackbar('Eliminado');
       notifyListeners();
     } catch (e) {
       _snackbarManager.errorSnackbar(e.toString());

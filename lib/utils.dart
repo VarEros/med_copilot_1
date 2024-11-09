@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/services.dart';
 
 const months = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
@@ -64,13 +65,13 @@ class SnackbarManager {
 
   SnackbarManager(this.object);
 
-  successSnackbar() { 
+  successSnackbar(String action) { 
     return scaffoldKey.currentState!.showSnackBar(SnackBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       content: AwesomeSnackbarContent(
-        title: object,
-        message: '${object.toLowerCase()} con exito',
+        title: '$object $action',
+        message: '$object ${action.toLowerCase()} con exito',
         contentType: ContentType.success,
       )
     ));
@@ -86,5 +87,15 @@ class SnackbarManager {
         contentType: ContentType.failure,
       )
     ));
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }

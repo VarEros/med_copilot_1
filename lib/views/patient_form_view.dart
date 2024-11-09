@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:med_copilot_1/models/patient.dart';
 import 'package:med_copilot_1/utils.dart';
 import 'package:med_copilot_1/viewmodels/patient_view_model.dart';
@@ -36,10 +37,10 @@ class _PatientFormViewState extends State<PatientFormView> {
 
     if (widget.isEditMode && patientViewModel.selectedPatient != null) {
       // Prellenado de los datos para editar
-      _personalIdController.text = patientViewModel.selectedPatient!.personalId;
+      _personalIdController.text = getPersonalIdFormated(patientViewModel.selectedPatient!.personalId);
       _nameController.text = patientViewModel.selectedPatient!.name;
       _lastNameController.text = patientViewModel.selectedPatient!.lastname;
-      _phoneController.text = patientViewModel.selectedPatient!.phone ?? '';
+      _phoneController.text = patientViewModel.selectedPatient!.phone != null ? getPhoneFormated(patientViewModel.selectedPatient!.phone!) : '';
       _emailController.text = patientViewModel.selectedPatient!.email ?? '';
       _birthdate = patientViewModel.selectedPatient!.birthdate;
     }
@@ -74,11 +75,11 @@ class _PatientFormViewState extends State<PatientFormView> {
 
       final patient = Patient(
         id: widget.isEditMode ? patientViewModel.selectedPatient!.id : 0,
-        personalId: _personalIdController.text,
+        personalId: _personalIdController.text.replaceAll(RegExp(r'-'), ''),
         name: _nameController.text,
         lastname: _lastNameController.text,
         birthdate: _birthdate!,
-        phone: _phoneController.text,
+        phone: _phoneController.text.replaceAll(RegExp(r'-'), ''),
         email: _emailController.text,
         followUp: true
       );
@@ -122,7 +123,8 @@ class _PatientFormViewState extends State<PatientFormView> {
                   controller: _personalIdController,
                   decoration: const InputDecoration(labelText: 'Cedula', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-                  maxLength: 14,
+                  maxLength: 17,
+                  inputFormatters: [cedMaskFormatter, UpperCaseTextFormatter()],
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
@@ -143,7 +145,8 @@ class _PatientFormViewState extends State<PatientFormView> {
                   controller: _phoneController,
                   decoration: const InputDecoration(labelText: 'Teléfono', counterText: ''),
                   validator: (value) => value!.isEmpty ? 'Campo obligatorio' : null,
-                  maxLength: 8,
+                  maxLength: 9,
+                  inputFormatters: [phoneMaskFormatter],
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
@@ -174,18 +177,31 @@ class _PatientFormViewState extends State<PatientFormView> {
     );
   }
 
-  String? validateEmail(String? value) {
-  const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
-      r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
-      r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
-      r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
-      r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
-      r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
-      r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
-  final regex = RegExp(pattern);
+  final phoneMaskFormatter = MaskTextInputFormatter(
+    mask: '####-####', 
+    type: MaskAutoCompletionType.lazy
+  );
 
-  return value!.isNotEmpty && !regex.hasMatch(value)
-      ? 'Enter a valid email address'
-      : null;
-}
+    final cedMaskFormatter = MaskTextInputFormatter(
+    mask: '###-######-####A', 
+    type: MaskAutoCompletionType.lazy
+  );
+
+  String getPhoneFormated(String phone) => phone.replaceRange(4, null, '-${phone.substring(4)}');
+  String getPersonalIdFormated(String ced) => '${ced.substring(0,3)}-${ced.substring(3,9)}-${ced.substring(9,14)}';
+
+  String? validateEmail(String? value) {
+    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+    final regex = RegExp(pattern);
+
+    return value!.isNotEmpty && !regex.hasMatch(value)
+        ? 'Enter a valid email address'
+        : null;
+  }
 }

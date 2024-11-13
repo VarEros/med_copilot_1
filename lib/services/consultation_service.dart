@@ -50,6 +50,10 @@ class ConsultationService {
       body: json.encode(consultation.toJson()),
     );
 
+    if (response.statusCode == 404) {
+      throw 'La consulta que desea modificar ya no esta disponible';
+    }
+
     if (response.statusCode != 200) {
       throw Exception('Error al actualizar consulta');
     }
@@ -58,6 +62,10 @@ class ConsultationService {
   // Eliminar una consulta
   Future<void> deleteConsultation(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/$id'));
+
+    if (response.statusCode == 404) {
+      throw 'La consulta que desea eliminar ya no esta disponible';
+    }
 
     if (response.statusCode != 200) {
       throw Exception('Error al eliminar consulta');

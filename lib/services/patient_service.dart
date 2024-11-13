@@ -38,6 +38,10 @@ class PatientService {
       body: json.encode(patient.toJson()),
     );
 
+    if (response.statusCode == 404) {
+      throw 'El paciente que desea modificar ya no esta disponible';
+    }
+
     if (response.statusCode != 200) {
       throw json.decode(response.body)['message'];
     }
@@ -46,6 +50,10 @@ class PatientService {
   // Eliminar un paciente
   Future<void> deletePatient(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/$id'));
+
+    if (response.statusCode == 404) {
+      throw 'El paciente que desea eliminar ya no esta disponible';
+    }
 
     if (response.statusCode != 200) {
       throw Exception('Error al eliminar paciente');

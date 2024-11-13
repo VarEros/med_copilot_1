@@ -53,7 +53,8 @@ class ThemeProvider with ChangeNotifier {
 
   Future<void> _saveFontPreference() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('font', _fontType.toString().split('.').last);
+    await prefs.setString('font', _fontType);
+    
   }
 
   Future<void> loadPreferences() async {

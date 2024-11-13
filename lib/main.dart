@@ -106,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
             items: <Widget>[
               Icon(Icons.people, size: 30, color: Theme.of(context).colorScheme.onSurface),
               Icon(Icons.folder, size: 30, color: Theme.of(context).colorScheme.onSurface),
+              Icon(Icons.settings, size: 30, color: Theme.of(context).colorScheme.onSurface),
             ],
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             buttonBackgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,

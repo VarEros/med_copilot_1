@@ -20,7 +20,7 @@ class PatientSelectionView extends StatelessWidget {
         itemBuilder: (context, index) {
           final patient = patients[index];
           return ListTile(
-            title: Text(patient.name),
+            title: Text('${patient.name} ${patient.lastname}'),
             subtitle: Text('cedula: ${patient.personalId}'),
             onTap: () {
               Navigator.of(context).push(

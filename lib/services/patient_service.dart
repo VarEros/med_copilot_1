@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:med_copilot_1/models/patient.dart';
 
 class PatientService {
-  final String baseUrl = 'http://192.168.1.11:5000/patients';
+  final String baseUrl = 'http://localhost:5000/patients';
 
   // Obtener todos los pacientes
   Future<List<Patient>> fetchPatients() async {

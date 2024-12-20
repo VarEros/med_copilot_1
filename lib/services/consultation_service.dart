@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ConsultationService {
-  final String baseUrl = 'http://192.168.1.11:5000/consultations';
+  final String baseUrl = 'http://localhost:5000/consultations';
 
   // Obtener todas las consultas
   Future<List<Consultation>> fetchConsultations() async {

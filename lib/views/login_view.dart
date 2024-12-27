@@ -43,6 +43,7 @@ class _LoginViewState extends State<LoginView> {
       userType: LoginUserType.email,
       onLogin: _authUser,
       onSignup: _signUp,
+      loginAfterSignUp: false,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => const HomeScreen(),

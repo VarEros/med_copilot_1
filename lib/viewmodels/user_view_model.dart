@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:med_copilot_1/models/user.dart';
+import 'package:med_copilot_1/services/auth_service.dart';
 import 'package:med_copilot_1/services/user_service.dart';
 import 'package:med_copilot_1/utils.dart';
 
 class UserViewModel extends ChangeNotifier {
   final UserService _userService = UserService();
-  final SnackbarManager _snackbarManager = SnackbarManager('Paciente');
-
-  UserViewModel();
+  final AuthService _authService = AuthService();
+  final SnackbarManager _snackbarManager = SnackbarManager('Usuario');
 
   Future<String?> createUser(User user) async {
     try {
@@ -23,8 +23,9 @@ class UserViewModel extends ChangeNotifier {
 
   Future<String?> authUser(User user) async {
     try {
-      await _userService.authUser(user);
+      final accessToken = await _userService.authUser(user);
       _snackbarManager.successSnackbar('Autenticado');
+      await _authService.saveUser(accessToken);
       notifyListeners();
       return null;
     } catch (e) {

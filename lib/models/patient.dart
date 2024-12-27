@@ -9,6 +9,7 @@ class Patient {
   String? email;
   String? phone;
   bool followUp;
+  int? userId;
 
   Patient({
     required this.id,
@@ -19,6 +20,7 @@ class Patient {
     this.email,
     this.phone,
     required this.followUp,
+    this.userId
   });
   
   int get calculateAge {
@@ -39,11 +41,12 @@ class Patient {
       birthdate: DateTime.parse(json['birthdate']),
       email: json['email'],
       phone: json['phone'],
-      followUp: json['follow_up']
+      followUp: json['follow_up'],
+      userId: json['user_id']
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(int userId) {
     return {
       'id': id,
       'personal_id': personalId,
@@ -52,7 +55,8 @@ class Patient {
       'birthdate': '${birthdate!.toUtc().toIso8601String().split('.').first}Z',
       'email': email,
       'phone': phone,
-      'follow_up': followUp
+      'follow_up': followUp,
+      'user_id': userId
     };
   }
 }

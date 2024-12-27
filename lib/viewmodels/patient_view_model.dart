@@ -99,7 +99,7 @@ class PatientViewModel extends ChangeNotifier {
       name: '${data[4]} ${data[5]}', 
       lastname: '${data[2]} ${data[3]}', 
       birthdate: DateFormat('dd/MM/yyyy HH:mm').parse(data[7]),
-      followUp: true
+      followUp: true,
     );
   }
 }
